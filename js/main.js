@@ -34,57 +34,51 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var DL = /** @class */ (function () {
-    function DL() {
-    }
-    var _a;
-    _a = DL;
-    DL.dlFile = function (event) {
-        event.preventDefault();
-        fetch("http://localhost:8000/fileget.php", {
-            method: "GET"
-        })
-            .then(function (response) { return __awaiter(_a, void 0, void 0, function () {
-            var blob, headers;
-            return __generator(_a, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        if (!response.ok) {
-                            // AxiosならerrorオブジェクトとしてバックエンドのエラーJSONが拾えるはず
-                            throw new Error(response.statusText);
-                        }
-                        return [4 /*yield*/, response.blob()];
-                    case 1:
-                        blob = _b.sent();
-                        headers = response.headers;
-                        return [2 /*return*/, { blob: blob, headers: headers }];
-                }
-            });
-        }); })
-            .then(function (data) {
-            var contentDisposition = data.headers.get("content-disposition");
-            var fileName = _a.getFileNameFromContentDisposition(contentDisposition);
-            var anchor = document.createElement("a");
-            anchor.href = window.URL.createObjectURL(data.blob);
-            anchor.download = fileName;
-            anchor.click();
-        })["catch"](function (error) {
-            // エラースナックバーを表示
+var _this = this;
+var dlFile = function (event) {
+    event.preventDefault();
+    fetch("http://localhost:8000/fileget.php", {
+        method: "GET"
+    })
+        .then(function (response) { return __awaiter(_this, void 0, void 0, function () {
+        var blob, headers;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    if (!response.ok) {
+                        // AxiosならerrorオブジェクトとしてバックエンドのエラーJSONが拾えるはず
+                        throw new Error(response.statusText);
+                    }
+                    return [4 /*yield*/, response.blob()];
+                case 1:
+                    blob = _a.sent();
+                    headers = response.headers;
+                    return [2 /*return*/, { blob: blob, headers: headers }];
+            }
         });
-    };
-    // バックエンドで指定されたファイル名を取得
-    // コピペ
-    // https://tkkm.tokyo/post-243/
-    DL.getFileNameFromContentDisposition = function (disposition) {
-        var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/; // 正規表現でfilenameを抜き出す
-        var matches = filenameRegex.exec(disposition);
-        if (matches != null && matches[1]) {
-            var fileName = matches[1].replace(/['"]/g, "");
-            return decodeURI(fileName); // 日本語対応
-        }
-        else {
-            return null;
-        }
-    };
-    return DL;
-}());
+    }); })
+        .then(function (data) {
+        var contentDisposition = data.headers.get("content-disposition");
+        var fileName = getFileNameFromContentDisposition(contentDisposition);
+        var anchor = document.createElement("a");
+        anchor.href = window.URL.createObjectURL(data.blob);
+        anchor.download = fileName;
+        anchor.click();
+    })["catch"](function (error) {
+        // エラースナックバーを表示
+    });
+};
+// バックエンドで指定されたファイル名を取得
+// コピペ
+// https://tkkm.tokyo/post-243/
+var getFileNameFromContentDisposition = function (disposition) {
+    var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/; // 正規表現でfilenameを抜き出す
+    var matches = filenameRegex.exec(disposition);
+    if (matches != null && matches[1]) {
+        var fileName = matches[1].replace(/['"]/g, "");
+        return decodeURI(fileName); // 日本語対応
+    }
+    else {
+        return null;
+    }
+};
