@@ -29,7 +29,7 @@ class DL {
   // バックエンドで指定されたファイル名を取得
   // コピペ
   // https://tkkm.tokyo/post-243/
-  static getFileNameFromContentDisposition = (disposition: string) => {
+  private static getFileNameFromContentDisposition = (disposition: string) => {
     const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/; // 正規表現でfilenameを抜き出す
     const matches = filenameRegex.exec(disposition);
     if (matches != null && matches[1]) {
